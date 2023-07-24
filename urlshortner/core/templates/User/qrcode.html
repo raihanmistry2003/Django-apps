@@ -1,0 +1,71 @@
+{% extends 'User/base.html' %}
+
+{% block content %}
+{% load static %}
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Create Qr Codes</h4>
+        <p class="card-description">
+          Create amezing qr codes absolutely for free...
+        </p>
+        
+        {% if messages %}
+          
+          {% for message in messages %}
+            <div class="alert {{message.tags}}" role="alert">
+              <strong>{{message}}</strong>
+            </div>
+            
+          {% endfor %}
+            
+        {% endif %}
+          
+        <form action="" class="form-inline" method="POST">
+        {% csrf_token %}
+            <input type="text" name="email" value="{{user.email}}" hidden>
+            <label class="sr-only" for="inlineFormInputGroupUsername2">Long link</label>
+                <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@</div>
+                </div>
+                <input type="text" name="long_url" class="form-control" id="inlineFormInputGroupUsername2" placeholder="Long Link">
+            </div>
+            <label class="sr-only" for="inlineFormInputName2">Link Title</label>
+            <input type="text" name="title" class="form-control mb-2 mr-sm-2 ml-3" id="inlineFormInputName2" placeholder="Link Title">
+
+          <button type="submit" class="btn btn-primary mb-2 ml-3">Create Qr codes</button>
+        </form>
+      </div>
+    </div>
+</div>
+  
+<div class="row">
+  {% for i in qrcode %}
+  
+  {% if i.email == user.email %}
+  <div class="col-md-4 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">{{i.title}}</h4>
+        <img src="{{i.qrcode.url}}" class="img-fluid" alt="Qr Code">
+        <div class="btn-group template-demo">
+          <button type="button" class="btn btn-danger btn-icon-text">
+            <i class="mdi mdi-delete btn-icon-prepend"></i>
+            Delete
+          </button>
+          <button type="button" class="btn btn-primary btn-icon-text">
+            <i class="mdi mdi-download btn-icon-prepend"></i>
+            Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+    
+{% endfor %}
+</div>
+
+{% endblock content %}
+    

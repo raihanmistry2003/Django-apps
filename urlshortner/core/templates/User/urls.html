@@ -1,0 +1,118 @@
+{% extends 'User/base.html' %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">
+        
+        {% if title %}
+          {{title}}
+        {% else %}
+          Create Urls
+        {% endif %}
+          </h4>
+        <p class="card-description">
+          Create amezing urls absolutely for free...
+        </p>
+        
+        {% if messages %}
+          
+          {% for message in messages %}
+            <div class="alert {{message.tags}}" role="alert">
+              <strong>{{message}}</strong>
+            </div>
+            
+          {% endfor %}
+            
+        {% endif %}
+          
+        <form action="{% if title %} {% url 'Update_url' urls_obj.short_url  %} {% else %} {% url 'Create_url' %} {% endif %}" class="form-inline" method="POST">
+        {% csrf_token %}
+            <input type="text" name="email" value="{{user.email}}" hidden>
+            <label class="sr-only" for="inlineFormInputGroupUsername2">Long link</label>
+                <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@</div>
+                </div>
+                <input type="text" name="long_url" class="form-control" id="inlineFormInputGroupUsername2" value="{% if urls_obj %}{{urls_obj.long_url}}{% endif %}" placeholder="Long Link" 
+                {% if button %}
+                  readonly
+                {% endif %}
+                   required>
+            </div>
+
+            <label class="sr-only" for="inlineFormInputName2">Short link</label>
+            <input type="text" name="short_url" class="form-control mb-2 mr-sm-2 ml-3" id="inlineFormInputName2" value="{% if urls_obj %}{{urls_obj.short_url}}{% endif %}" placeholder="Short Link" required>
+
+            <label class="sr-only" for="inlineFormInputName2">Link Title</label>
+            <input type="text" name="title" class="form-control mb-2 mr-sm-2 ml-3" id="inlineFormInputName2" value="{% if urls_obj %}{{urls_obj.title}}{% endif %}" placeholder="Link Title" required>
+
+          <button type="submit" class="btn btn-primary mb-2 ml-3">
+          {% if button %}
+            {{button}}
+          {% else %}
+            Create
+          {% endif %}
+            </button>
+        </form>
+      </div>
+    </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">All Urls</h4>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>
+                  Short Link
+                </th>
+                <th>
+                  Long Link
+                </th>
+                <th>
+                  Link Title
+                </th>
+                <th>
+                  Hit Count
+                </th>
+                <th>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for url in urls %}
+                {% if url.email == user.email %}
+                  <tr>
+                    <td class="py-1">
+                      http://127.0.0.1:8000/{{url.short_url}}
+                    </td>
+                    <td>
+                      {{url.long_url}}
+                    </td>
+                    <td>
+                      {{url.title}}
+                    </td>
+                    <td>
+                      {{url.url_hit_count}}
+                    </td>
+                    <td>                  
+                      <a href="{% url 'Create_qr' url.short_url %}" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Make Qr Code"><i class="mdi mdi-qrcode"></i></a>                 
+                      <a href="{% url 'Edit_url' url.short_url %}" class="btn btn-primary btn-sm"><i class="mdi mdi-tooltip-edit"></i></a>
+                      <a href="{% url 'Delete_url' url.short_url %}" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete"><i class="mdi mdi-delete"></i></a>
+                    </td>
+                  </tr>
+                {% endif %}
+              {% endfor %}               
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+    

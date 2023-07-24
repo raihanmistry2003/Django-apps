@@ -1,0 +1,57 @@
+{% extends 'User/base.html' %}
+
+{% block content %}
+{% load static %}
+{% if messages %}
+          
+  {% for message in messages %}
+    <div class="col-md-12">
+      <div class="alert {{message.tags}}" role="alert">
+        <strong>{{message}}</strong>
+      </div>
+    </div>
+  {% endfor %}
+    
+{% endif %}
+<div class="row">
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-center">
+                <img id="imgPreview" src="{% if user.profile_pic %} {{user.profile_pic.url}} {% else %} {% static 'core/images/pro_image.png' %} {% endif %}" class="rounded-circle mt-3" width="200" alt="Profile Image">
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+                <input type="text" name="email" value="{{user.email}}" hidden>
+                <div class="mb-3">
+                    <label for="photo" class="form-label">Choose file</label>
+                    <input type="file" class="form-control" name="profile_pic" id="photo" placeholder="Choose your Photo" aria-describedby="fileHelpId">
+                    <div id="fileHelpId" class="form-text">Select Your Profile Picture</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>   
+          </div>
+        </div>
+    </div>
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Change your password</h4>
+            <form action="{% url 'Change_password' %}" method="POST">
+            {% csrf_token %}
+              <input type="text" name="email" value="{{user.email}}" hidden>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Old Password</label>
+                <input type="password" name="old_password" class="form-control" id="exampleInputPassword1" placeholder="Old Password">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputConfirmPassword1">New Password</label>
+                <input type="password" name="new_password" class="form-control" id="exampleInputConfirmPassword1" placeholder="New Password">
+              </div>
+              <button type="submit" class="btn btn-primary mr-2">Change Password</button>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
